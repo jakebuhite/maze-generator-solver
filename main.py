@@ -17,5 +17,5 @@ def main():
     maze.printMaze(True)
 
 if __name__ == '__main__':
-    #main()
-    dataCollection()
+    main()
+    #dataCollection()
