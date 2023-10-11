@@ -6,10 +6,10 @@ from enum import Enum
 import random
 
 class Directions(Enum):
-    NORTH = ("NORTH", "N")
-    EAST = ("EAST", "E")
-    SOUTH = ("SOUTH", "S")
-    WEST = ("WEST", "W")
+    NORTH = (-1, 0)
+    EAST = (0, 1)
+    SOUTH = (1, 0)
+    WEST = (0, -1)
 
 class Maze(object):
     def __init__(self, rows, cols) -> None:
@@ -165,15 +165,15 @@ class Maze(object):
 
         :return: None
         """ 
-        # Maintains the current cost of the cheapest path from starting cell to another cell
+        # Manages the cost of the cheapest path from starting cell to current cell (g(n))
         gScore = { cell: float('inf') for row in self.maze for cell in row }
         gScore[self.start] = 0
 
-        # Maintains the current cost a path could be from start to the goal.
+        # Manages the sum of heuristic costs with path costs (f(n) = g(n) + h(n))
         fScore = { cell: float('inf') for row in self.maze for cell in row }
         fScore[self.start] = self.mDistance(self.start, self.goal)
 
-        # Priority queue ordered by f(n), which is calculated using g(n) + h(n)
+        # Priority queue ordered by f(n)
         frontier = PriorityQueue()
         startH = self.mDistance(self.start, self.goal)
         frontier.put((startH, startH, self.start))
@@ -184,15 +184,8 @@ class Maze(object):
             if current == self.goal: break
             for dir in Directions:
                 if self.possibleDirection(dir, current):
-                    if dir == Directions.NORTH:
-                        neighbor = Cell(current.x - 1, current.y)
-                    elif dir == Directions.EAST:
-                        neighbor = Cell(current.x, current.y + 1)
-                    elif dir == Directions.WEST:
-                        neighbor = Cell(current.x, current.y - 1)
-                    else: # SOUTH
-                        neighbor = Cell(current.x + 1, current.y)
-
+                    (x, y) = dir.value
+                    neighbor = Cell(current.x + x, current.y + y)
                     newF = gScore[current] + 1 + self.mDistance(neighbor, self.goal)
                     if newF < fScore[neighbor]:
                         gScore[neighbor] = gScore[current] + 1

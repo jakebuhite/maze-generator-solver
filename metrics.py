@@ -35,7 +35,26 @@ def dataCollection():
         # Delete maze
         del maze
     
-    for i in range(100, 1001, 50):
+    for i in range(100, 1000, 50):
+        maze = Maze(i, i)
+
+        # Get time before and after generation
+        start = timer()
+        generateMemUsage = max(memory_usage(maze.generateMaze))
+        elapsedGen = timer() - start # seconds
+
+        # Get time before and after solving
+        start = timer()
+        solvedMemUsage = max(memory_usage(maze.solveMaze))
+        elapsedSolve = timer() - start # seconds
+
+        writer.writerow(["{}x{}".format(i, i), elapsedGen, elapsedSolve, generateMemUsage, solvedMemUsage])
+        print("UPDATE > " + "{}x{}".format(i, i) + " " + str(elapsedGen) + " " + str(elapsedSolve) + " " + str(generateMemUsage) + " " + str(solvedMemUsage))
+        
+        # Delete maze
+        del maze
+
+    for i in range(1000, 8001, 500):
         maze = Maze(i, i)
 
         # Get time before and after generation
